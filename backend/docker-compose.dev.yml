@@ -1,0 +1,14 @@
+services:
+  mongo:
+    image: mongo
+    container_name: anon_messageboard_mongo_dev
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: messages
+    volumes:
+      - messages:/data/db
+volumes:
+  messages:
