@@ -6,7 +6,7 @@ export type MessageDocument = Message & Document;
 
 @Schema()
 export class Message {
-  @Prop({ required: true })
+  @Prop({ default: 'anonymous' })
   user: string;
 
   @Prop({ required: true })

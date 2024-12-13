@@ -15,7 +15,7 @@ let Message = class Message {
 };
 exports.Message = Message;
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)({ default: 'anonymous' }),
     __metadata("design:type", String)
 ], Message.prototype, "user", void 0);
 __decorate([

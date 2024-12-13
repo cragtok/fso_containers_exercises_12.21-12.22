@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MessageList from './components/MessageList/MessageList';
 import MessageFormModal from './components/MessageFormModal/MessageFormModal';
 
@@ -11,36 +11,13 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 
-const messages = [
-  { user: 'Anon', date: new Date(), content: 'New Content' },
-  {
-    user: 'Anon',
-    date: new Date(),
-    content: 'khkawdhawkjhdawkj hjkhkhakj akjdhakhdwak ',
-  },
-  { user: 'Anon', date: new Date(), content: 'New Content akdhaa' },
-  { user: 'Anon', date: new Date(), content: 'New Content 123' },
-  { user: 'Anon', date: new Date(), content: 'New Content 123' },
-  { user: 'Anon', date: new Date(), content: 'New Content 123' },
-  { user: 'Anon', date: new Date(), content: 'New Content 123' },
-  { user: 'Anon', date: new Date(), content: 'New Content 123' },
-  { user: 'Anon', date: new Date(), content: 'New Content 123' },
-];
-
 interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   window?: () => Window;
   children?: React.ReactElement<{ elevation?: number }>;
 }
 
 function ElevationScroll(props: Props) {
   const { children, window } = props;
-  // Note that you normally won't need to set the window ref as useScrollTrigger
-  // will default to window.
-  // This is only being set here because the demo is in an iframe.
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
@@ -54,10 +31,63 @@ function ElevationScroll(props: Props) {
     : null;
 }
 
+interface Message {
+  _id: string;
+  user: string;
+  date: string;
+  content: string;
+}
+
+interface NewMessage {
+  user?: string;
+  content: string;
+}
+
 export const App: React.FC = () => {
   const [open, setOpen] = useState(false);
-  // const handleOpen = () => setOpen(true);
+  const [messages, setMessages] = useState<Message[]>([]);
   const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/messages');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data: Message[] = await response.json();
+        setMessages(data);
+      } catch (error) {
+        console.error('Failed to fetch messages:', error);
+      }
+    };
+
+    fetchMessages();
+  }, []);
+
+  const postMessage = async (newMessage: NewMessage) => {
+    try {
+      const response = await fetch('http://localhost:3000/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...newMessage,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setMessages([...messages, result]);
+    } catch (error) {
+      console.error('Error posting message:', error);
+    }
+  };
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -93,6 +123,7 @@ export const App: React.FC = () => {
       <MessageFormModal
         open={open}
         handleClose={handleClose}
+        postMessage={postMessage}
       />
     </React.Fragment>
   );

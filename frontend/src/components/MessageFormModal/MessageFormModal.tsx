@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import { Modal, Box, TextField, Button, Typography } from '@mui/material';
 
+interface NewMessage {
+  user?: string;
+  content: string;
+}
+
 interface Props {
   open: boolean;
   handleClose: () => void;
+  postMessage: (message: NewMessage) => void;
 }
 
-const FormModal: React.FC<Props> = ({ open, handleClose }) => {
-  const [formData, setFormData] = useState({ title: '', description: '' });
+const FormModal: React.FC<Props> = ({ open, handleClose, postMessage }) => {
+  const [formData, setFormData] = useState({ user: '', content: '' });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -18,7 +24,12 @@ const FormModal: React.FC<Props> = ({ open, handleClose }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form Data:', formData);
+    if (!formData.content) {
+      alert('Message content is missing');
+      return;
+    }
+
+    postMessage(formData);
     handleClose();
   };
 
@@ -54,9 +65,9 @@ const FormModal: React.FC<Props> = ({ open, handleClose }) => {
           <form onSubmit={handleSubmit}>
             {/* Text Input */}
             <TextField
-              label='Title'
-              name='title'
-              value={formData.title}
+              label='Author'
+              name='user'
+              value={formData.user}
               onChange={handleChange}
               fullWidth
               margin='normal'
@@ -65,9 +76,9 @@ const FormModal: React.FC<Props> = ({ open, handleClose }) => {
 
             {/* Textarea Input */}
             <TextField
-              label='Description'
-              name='description'
-              value={formData.description}
+              label='Content'
+              name='content'
+              value={formData.content}
               onChange={handleChange}
               fullWidth
               margin='normal'

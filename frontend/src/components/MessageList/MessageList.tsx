@@ -2,8 +2,9 @@ import { FC } from 'react';
 import Message from '../Message/Message';
 
 type MessageType = {
+  _id: string;
   user: string;
-  date: Date;
+  date: string;
   content: string;
 };
 
@@ -17,7 +18,7 @@ const MessageList: FC<MessageListProps> = ({ messages }) => {
       {messages.map((message: MessageType) => {
         return (
           <Message
-            key={crypto.randomUUID()}
+            key={message._id}
             user={message.user}
             date={message.date}
             content={message.content}

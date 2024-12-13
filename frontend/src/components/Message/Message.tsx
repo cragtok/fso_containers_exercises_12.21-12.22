@@ -8,8 +8,9 @@ import {
 } from '@mui/material';
 
 interface MessageProps {
+  _id: string;
   user: string;
-  date: Date;
+  date: string;
   content: string;
 }
 
@@ -43,7 +44,7 @@ const Message: FC<MessageProps> = ({ user, date, content }) => {
       <Card sx={{ marginBottom: 2 }}>
         <CardHeader
           title={user}
-          subheader={`Posted on ${formatDate(date)}`}
+          subheader={`Posted on ${formatDate(new Date(date))}`}
         />
         <Divider />
         <CardContent>

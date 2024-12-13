@@ -6,7 +6,7 @@ import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://root:example@localhost:27017'),
+    MongooseModule.forRoot(process.env.MONGODB_URI),
     MessagesModule,
   ],
   controllers: [AppController],
@@ -14,6 +14,3 @@ import { MessagesModule } from './messages/messages.module';
 })
 export class AppModule {}
 
-// PORT=3000 MONGODB_URI=mongodb://root:example@mongo:27017/messages npm run start:dev
-
-// imports: [MongooseModule.forRoot(process.env.MONGODB_URI), MessagesModule],
