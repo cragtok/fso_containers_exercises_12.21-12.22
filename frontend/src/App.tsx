@@ -43,6 +43,11 @@ interface NewMessage {
   content: string;
 }
 
+const backendUrl =
+  import.meta.env.MODE === 'development'
+    ? import.meta.env.VITE_BACKEND_URL_DEV
+    : import.meta.env.VITE_BACKEND_URL_PROD;
+
 export const App: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -51,7 +56,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch('http://localhost:3000/messages');
+        const response = await fetch(`${backendUrl}/messages`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -67,7 +72,7 @@ export const App: React.FC = () => {
 
   const postMessage = async (newMessage: NewMessage) => {
     try {
-      const response = await fetch('http://localhost:3000/messages', {
+      const response = await fetch(`${backendUrl}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

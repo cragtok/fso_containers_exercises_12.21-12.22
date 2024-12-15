@@ -10,6 +10,9 @@ export class MessagesService {
   ) {}
 
   async create(user: string, content: string): Promise<Message> {
+    if(!user){
+        user = "anonymous";
+    }
     const newMessage = new this.messageModel({ user, content, date: Date.now() });
     return newMessage.save();
   }

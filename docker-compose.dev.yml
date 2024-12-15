@@ -1,0 +1,48 @@
+services:
+  mongo:
+    image: mongo
+    container_name: anon_messageboard_mongo_dev
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: messages
+    volumes:
+      - messages:/data/db
+  backend:
+    image: anon_messageboard_backend_dev
+    container_name: anon_messageboard_backend_dev
+    build:
+      context: ./backend
+      dockerfile: dev.Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./backend/src:/usr/src/app/src
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://root:example@mongo:27017
+    depends_on:
+      - mongo
+  frontend:
+    image: anon_messageboard_frontend_dev
+    container_name: anon_messageboard_frontend_dev
+    build:
+      context: ./frontend
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./frontend/src:/usr/src/app/src
+      - ./frontend/.env:/usr/src/app/.env
+  nginx:
+    image: nginx:1.20.1
+    container_name: anon_messageboard_nginx_dev
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    depends_on:
+      - frontend
+
+volumes:
+  messages:

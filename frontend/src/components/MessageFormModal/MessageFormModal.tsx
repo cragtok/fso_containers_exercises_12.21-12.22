@@ -30,6 +30,7 @@ const FormModal: React.FC<Props> = ({ open, handleClose, postMessage }) => {
     }
 
     postMessage(formData);
+    setFormData({ user: '', content: '' });
     handleClose();
   };
 

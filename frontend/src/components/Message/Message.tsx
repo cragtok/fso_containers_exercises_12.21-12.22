@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 
 interface MessageProps {
-  _id: string;
+  _id?: string;
   user: string;
   date: string;
   content: string;
