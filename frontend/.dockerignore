@@ -2,3 +2,6 @@
 *Dockerfile*
 *docker-compose*
 node_modules
+.gitignore
+.npmrc
+npm-debug.log
