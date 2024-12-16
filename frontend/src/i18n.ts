@@ -21,7 +21,7 @@ void i18next
   .use(LanguageDetector)
   .init({
     resources,
-    lng: import.meta.env.PROD ? '<your-preferred-language>' : 'en', // this is the default language, will override the language detector
+    lng: 'en', // this is the default language, will override the language detector
     fallbackLng: 'en', // browser will fallback to this one if preferred translation is not present in destination file.
     debug: import.meta.env.DEV, // Turn the debugger on in dev mode
     interpolation: {
